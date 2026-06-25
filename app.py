@@ -209,9 +209,9 @@ st.markdown("""
   50%       { transform: scale(1);    }
   75%       { transform: scale(1.12); }
 }
-@keyframes blink {
-  0%, 90%, 100% { transform: scaleY(1);    }
-  95%            { transform: scaleY(0.08); }
+@keyframes sway {
+  0%, 100% { transform: rotate(-8deg) scale(1);    }
+  50%       { transform: rotate(8deg)  scale(1.08); }
 }
 @keyframes sparkle {
   0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg);   }
@@ -299,50 +299,8 @@ st.markdown("""
   <span class="sparkle sp3">🌸</span>
   <span class="sparkle sp4">✨</span>
 
-  <!-- Ojitos animados en SVG puro -->
-  <div class="eyes-wrap">
-    <svg width="120" height="64" viewBox="0 0 120 64" xmlns="http://www.w3.org/2000/svg">
-      <!-- Ojo izquierdo -->
-      <g style="animation: blink 4s ease-in-out infinite; transform-origin: 34px 34px;">
-        <!-- Blanco del ojo -->
-        <ellipse cx="34" cy="34" rx="24" ry="22" fill="white" stroke="#FBBDCF" stroke-width="2"/>
-        <!-- Iris -->
-        <circle cx="34" cy="34" r="14" fill="#6366F1"/>
-        <!-- Brillo iris -->
-        <circle cx="34" cy="34" r="10" fill="#818CF8"/>
-        <!-- Pupila -->
-        <circle cx="34" cy="34" r="6"  fill="#1A2E44"/>
-        <!-- Destello -->
-        <circle cx="29" cy="29" r="3"  fill="white" opacity="0.8"/>
-        <!-- Corazón en pupila -->
-        <text x="31" y="37" font-size="7" fill="#FB7185" font-family="serif">♥</text>
-      </g>
-      <!-- Pestañas ojo izquierdo -->
-      <line x1="18" y1="14" x2="22" y2="18" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="28" y1="10" x2="29" y2="15" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="38" y1="10" x2="37" y2="15" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="47" y1="14" x2="44" y2="18" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
-
-      <!-- Ojo derecho -->
-      <g style="animation: blink 4s ease-in-out infinite 0.15s; transform-origin: 86px 34px;">
-        <ellipse cx="86" cy="34" rx="24" ry="22" fill="white" stroke="#FBBDCF" stroke-width="2"/>
-        <circle cx="86" cy="34" r="14" fill="#6366F1"/>
-        <circle cx="86" cy="34" r="10" fill="#818CF8"/>
-        <circle cx="86" cy="34" r="6"  fill="#1A2E44"/>
-        <circle cx="81" cy="29" r="3"  fill="white" opacity="0.8"/>
-        <text x="83" y="37" font-size="7" fill="#FB7185" font-family="serif">♥</text>
-      </g>
-      <!-- Pestañas ojo derecho -->
-      <line x1="70" y1="14" x2="74" y2="18" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="80" y1="10" x2="81" y2="15" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="90" y1="10" x2="89" y2="15" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="99" y1="14" x2="96" y2="18" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
-
-      <!-- Corazón flotando arriba -->
-      <text x="55" y="12" font-size="11" fill="#FB7185"
-            style="animation: heartbeat 1.4s ease-in-out infinite; transform-origin: 60px 8px;">♥</text>
-    </svg>
-  </div>
+  <!-- Rosa animada -->
+  <div class="eyes-wrap" style="font-size: 4rem; line-height: 1; display:inline-block; animation: sway 2.5s ease-in-out infinite;">🌹</div>
 
   <div class="lili-title">✦ con amor ✦</div>
 
