@@ -189,3 +189,171 @@ if archivos:
                 st.markdown(f'<div class="{css}">{r["msg"]}</div>', unsafe_allow_html=True)
 else:
     st.info("👆 Sube uno o más archivos ZIP para comenzar.")
+
+# ─────────────────────────────────────────
+# 💖 Dedicatoria — al final de la app
+# ─────────────────────────────────────────
+st.markdown("<br><br>", unsafe_allow_html=True)
+st.divider()
+
+st.markdown("""
+<style>
+@keyframes float {
+  0%   { transform: translateY(0px);   }
+  50%  { transform: translateY(-8px);  }
+  100% { transform: translateY(0px);   }
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1);    }
+  25%       { transform: scale(1.18); }
+  50%       { transform: scale(1);    }
+  75%       { transform: scale(1.12); }
+}
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(1);    }
+  95%            { transform: scaleY(0.08); }
+}
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg);   }
+  50%       { opacity: 1; transform: scale(1.2) rotate(180deg); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.lili-card {
+    background: linear-gradient(135deg, #FFF0F6 0%, #FFF5F0 50%, #F0F4FF 100%);
+    border: 1.5px solid #FBBDCF;
+    border-radius: 20px;
+    padding: 2rem 2rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(251,113,133,0.12);
+    animation: fadeUp 0.8s ease both;
+    position: relative;
+    overflow: hidden;
+}
+.lili-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #FB7185, #F472B6, #C084FC, #818CF8, #FB7185);
+    background-size: 200% auto;
+    animation: shimmer 3s linear infinite;
+}
+
+/* Ojitos SVG */
+.eyes-wrap {
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+    margin-bottom: 0.6rem;
+}
+
+.lili-title {
+    font-size: 1.05rem;
+    color: #9D174D;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+}
+.lili-quote {
+    font-size: 1.25rem;
+    color: #1A2E44;
+    font-weight: 400;
+    line-height: 1.6;
+    margin: 0.5rem 0 1rem;
+    font-style: italic;
+}
+.lili-quote em {
+    font-style: normal;
+    font-weight: 700;
+    background: linear-gradient(90deg, #FB7185, #C084FC);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.lili-firma {
+    font-size: 0.82rem;
+    color: #9CA3AF;
+    margin-top: 0.8rem;
+}
+.sparkle {
+    position: absolute;
+    font-size: 1rem;
+    animation: sparkle 2s ease-in-out infinite;
+}
+.sp1 { top: 18px;  left: 22px;  animation-delay: 0s;    }
+.sp2 { top: 14px;  right: 28px; animation-delay: 0.7s;  }
+.sp3 { bottom: 22px; left: 40px; animation-delay: 1.1s; }
+.sp4 { bottom: 18px; right: 36px; animation-delay: 0.4s;}
+</style>
+
+<div class="lili-card">
+  <span class="sparkle sp1">✨</span>
+  <span class="sparkle sp2">💫</span>
+  <span class="sparkle sp3">🌸</span>
+  <span class="sparkle sp4">✨</span>
+
+  <!-- Ojitos animados en SVG puro -->
+  <div class="eyes-wrap">
+    <svg width="120" height="64" viewBox="0 0 120 64" xmlns="http://www.w3.org/2000/svg">
+      <!-- Ojo izquierdo -->
+      <g style="animation: blink 4s ease-in-out infinite; transform-origin: 34px 34px;">
+        <!-- Blanco del ojo -->
+        <ellipse cx="34" cy="34" rx="24" ry="22" fill="white" stroke="#FBBDCF" stroke-width="2"/>
+        <!-- Iris -->
+        <circle cx="34" cy="34" r="14" fill="#6366F1"/>
+        <!-- Brillo iris -->
+        <circle cx="34" cy="34" r="10" fill="#818CF8"/>
+        <!-- Pupila -->
+        <circle cx="34" cy="34" r="6"  fill="#1A2E44"/>
+        <!-- Destello -->
+        <circle cx="29" cy="29" r="3"  fill="white" opacity="0.8"/>
+        <!-- Corazón en pupila -->
+        <text x="31" y="37" font-size="7" fill="#FB7185" font-family="serif">♥</text>
+      </g>
+      <!-- Pestañas ojo izquierdo -->
+      <line x1="18" y1="14" x2="22" y2="18" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="28" y1="10" x2="29" y2="15" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="38" y1="10" x2="37" y2="15" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="47" y1="14" x2="44" y2="18" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
+
+      <!-- Ojo derecho -->
+      <g style="animation: blink 4s ease-in-out infinite 0.15s; transform-origin: 86px 34px;">
+        <ellipse cx="86" cy="34" rx="24" ry="22" fill="white" stroke="#FBBDCF" stroke-width="2"/>
+        <circle cx="86" cy="34" r="14" fill="#6366F1"/>
+        <circle cx="86" cy="34" r="10" fill="#818CF8"/>
+        <circle cx="86" cy="34" r="6"  fill="#1A2E44"/>
+        <circle cx="81" cy="29" r="3"  fill="white" opacity="0.8"/>
+        <text x="83" y="37" font-size="7" fill="#FB7185" font-family="serif">♥</text>
+      </g>
+      <!-- Pestañas ojo derecho -->
+      <line x1="70" y1="14" x2="74" y2="18" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="80" y1="10" x2="81" y2="15" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="90" y1="10" x2="89" y2="15" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="99" y1="14" x2="96" y2="18" stroke="#1A2E44" stroke-width="1.5" stroke-linecap="round"/>
+
+      <!-- Corazón flotando arriba -->
+      <text x="55" y="12" font-size="11" fill="#FB7185"
+            style="animation: heartbeat 1.4s ease-in-out infinite; transform-origin: 60px 8px;">♥</text>
+    </svg>
+  </div>
+
+  <div class="lili-title">✦ con amor ✦</div>
+
+  <div class="lili-quote">
+    Esta app no nació de un algoritmo.<br>
+    Nació de la inspiración de <em>unos ojitos muy bonitos</em>...<br>
+    los de mi <em>Lili</em> 🌸
+  </div>
+
+  <div class="lili-firma">
+    Desarrollado con 💜 · cada línea de código lleva tu nombre
+  </div>
+</div>
+""", unsafe_allow_html=True)
