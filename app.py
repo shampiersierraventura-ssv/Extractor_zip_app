@@ -1,0 +1,191 @@
+import streamlit as st
+import zipfile
+import shutil
+import io
+import zipfile as zf
+from pathlib import Path
+
+# ─────────────────────────────────────────
+# Página y estilo
+# ─────────────────────────────────────────
+st.set_page_config(
+    page_title="Extractor Masivo de ZIPs",
+    page_icon="📦",
+    layout="centered",
+)
+
+st.markdown("""
+<style>
+    /* Fondo suave gris azulado */
+    .stApp { background-color: #F0F4F8; }
+
+    /* Título principal */
+    h1 { color: #1A2E44; letter-spacing: -0.5px; }
+
+    /* Tarjeta resumen */
+    .resumen-card {
+        background: #1A2E44;
+        color: white;
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin-top: 1rem;
+    }
+    .resumen-card h3 { color: #7DD4FC; margin-bottom: 0.5rem; }
+    .resumen-card .stat { font-size: 1.6rem; font-weight: 700; }
+    .resumen-card .label { font-size: 0.8rem; opacity: 0.75; text-transform: uppercase; }
+
+    /* Línea de log */
+    .log-ok  { color: #22C55E; font-family: monospace; font-size: 0.85rem; }
+    .log-warn{ color: #F59E0B; font-family: monospace; font-size: 0.85rem; }
+    .log-err { color: #EF4444; font-family: monospace; font-size: 0.85rem; }
+    .log-info{ color: #94A3B8; font-family: monospace; font-size: 0.85rem; }
+</style>
+""", unsafe_allow_html=True)
+
+
+# ─────────────────────────────────────────
+# Lógica de selección (idéntica al notebook)
+# ─────────────────────────────────────────
+def seleccionar_xml(archivos_en_zip: list[str]) -> list[str]:
+    """
+    Reglas de selección:
+      Caso 1 – Un solo XML  → ese mismo.
+      Caso 2 – Varios archivos, uno o más XML → todos los XML.
+      Caso 3 – Exactamente dos XML → el que NO empieza con 'R'.
+    """
+    xmls = [
+        f for f in archivos_en_zip
+        if f.lower().endswith(".xml") and not f.endswith("/")
+    ]
+
+    if len(xmls) == 0:
+        return []
+    elif len(xmls) == 1:
+        return xmls
+    elif len(xmls) == 2:
+        candidatos = [f for f in xmls if not Path(f).name.upper().startswith("R")]
+        return candidatos if candidatos else [xmls[0]]
+    else:
+        return xmls
+
+
+# ─────────────────────────────────────────
+# Procesamiento en memoria
+# ─────────────────────────────────────────
+def procesar_zips(archivos_subidos) -> tuple[bytes, list[dict]]:
+    """
+    Recibe una lista de UploadedFile (ZIPs).
+    Devuelve:
+      - bytes de un ZIP de salida con todos los XMLs extraídos
+      - lista de registros de log
+    """
+    buffer_salida = io.BytesIO()
+    log = []
+    nombres_usados: set[str] = set()
+
+    with zf.ZipFile(buffer_salida, "w", compression=zf.ZIP_DEFLATED) as zip_out:
+        for archivo in archivos_subidos:
+            nombre_zip = archivo.name
+            log.append({"tipo": "info", "msg": f"🗜️  {nombre_zip}"})
+
+            try:
+                with zf.ZipFile(io.BytesIO(archivo.read()), "r") as zip_in:
+                    contenido = zip_in.namelist()
+                    xmls = seleccionar_xml(contenido)
+
+                    if not xmls:
+                        log.append({"tipo": "warn", "msg": f"  ⚠️  Sin XML en este ZIP — se omite."})
+                        continue
+
+                    for xml_interno in xmls:
+                        nombre_final = Path(xml_interno).name
+
+                        # Evitar sobreescritura
+                        nombre_unico = nombre_final
+                        contador = 1
+                        while nombre_unico in nombres_usados:
+                            stem = Path(nombre_final).stem
+                            nombre_unico = f"{stem}_{contador}.xml"
+                            contador += 1
+                        nombres_usados.add(nombre_unico)
+
+                        data_xml = zip_in.read(xml_interno)
+                        zip_out.writestr(nombre_unico, data_xml)
+                        log.append({"tipo": "ok", "msg": f"  ✅ Extraído → {nombre_unico}"})
+
+            except zf.BadZipFile:
+                log.append({"tipo": "err", "msg": f"  ❌ ZIP corrupto — se omite."})
+            except Exception as e:
+                log.append({"tipo": "err", "msg": f"  ❌ Error: {e}"})
+
+    return buffer_salida.getvalue(), log
+
+
+# ─────────────────────────────────────────
+# UI
+# ─────────────────────────────────────────
+st.title("📦 Extractor Masivo de ZIPs")
+st.markdown("Sube tus archivos `.zip` y descarga todos los XML extraídos en un solo archivo comprimido.")
+
+st.divider()
+
+archivos = st.file_uploader(
+    "Arrastra o selecciona los archivos ZIP",
+    type=["zip"],
+    accept_multiple_files=True,
+    help="Puedes subir varios ZIPs a la vez.",
+)
+
+if archivos:
+    st.markdown(f"**{len(archivos)} archivo(s) cargado(s)**")
+
+    col1, col2 = st.columns([1, 2])
+    with col1:
+        btn = st.button("▶️  Extraer XMLs", use_container_width=True, type="primary")
+
+    if btn:
+        with st.spinner("Procesando ZIPs…"):
+            zip_bytes, log = procesar_zips(archivos)
+
+        # ── Estadísticas ──────────────────────
+        n_ok   = sum(1 for r in log if r["tipo"] == "ok")
+        n_warn = sum(1 for r in log if r["tipo"] == "warn")
+        n_err  = sum(1 for r in log if r["tipo"] == "err")
+
+        st.markdown(f"""
+        <div class="resumen-card">
+            <h3>📊 Resumen</h3>
+            <div style="display:flex; gap:2rem; margin-top:0.5rem;">
+                <div>
+                    <div class="stat" style="color:#4ADE80;">{n_ok}</div>
+                    <div class="label">XMLs extraídos</div>
+                </div>
+                <div>
+                    <div class="stat" style="color:#FCD34D;">{n_warn}</div>
+                    <div class="label">ZIPs sin XML</div>
+                </div>
+                <div>
+                    <div class="stat" style="color:#F87171;">{n_err}</div>
+                    <div class="label">Errores</div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # ── Botón de descarga ─────────────────
+        if n_ok > 0:
+            st.download_button(
+                label="⬇️  Descargar XMLs extraídos (.zip)",
+                data=zip_bytes,
+                file_name="XMLs_extraidos.zip",
+                mime="application/zip",
+                use_container_width=True,
+            )
+
+        # ── Log detallado ─────────────────────
+        with st.expander("📋 Ver log detallado", expanded=(n_warn + n_err > 0)):
+            for r in log:
+                css = {"ok": "log-ok", "warn": "log-warn", "err": "log-err", "info": "log-info"}[r["tipo"]]
+                st.markdown(f'<div class="{css}">{r["msg"]}</div>', unsafe_allow_html=True)
+else:
+    st.info("👆 Sube uno o más archivos ZIP para comenzar.")
